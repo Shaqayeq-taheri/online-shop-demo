@@ -1,5 +1,7 @@
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 import { Container } from "react-bootstrap";
+import '../src/assets/styles/style.css'
 
 function App() {
     return (
@@ -11,6 +13,7 @@ function App() {
         <h1>Welcome to Digi Shop </h1>
       </Container>
       </main>
+      <Footer/>
       </>
     )
 }
