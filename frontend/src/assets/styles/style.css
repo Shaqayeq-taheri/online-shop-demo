@@ -2,8 +2,13 @@
     color:rgb(61, 61, 61);
 }
 
+
+/* product cards  */
+.bg-product-card{
+    background-color: rgb(244, 242, 242);
+}
 .price-product-color{
-    color:rgb(91, 91, 91) ;
+    color:#5c5c5c ;
 }
 
 .custom-navbar {

@@ -1,25 +1,26 @@
 import { Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 function Product({ product }) {
     return (
         <Card
-            className="shadow-lg p-3  bg-white rounded"
+            className="shadow-lg p-3 mt-5  rounded bg-product-card"
             style={{ height: "100%" }}
         >
-            <a href={`/product/${product._id}`}>
+            <Link to={`/product/${product._id}`}>
                 <Card.Img
                     src={product.image}
                     variant="top"
                     style={{ objectFit: "contain", height: "200px" }}
                 />
-            </a>
+            </Link>
 
             <Card.Body>
-                <a href={`/product/${product._id}`}>
+                <Link to={`/product/${product._id}`}>
                     <Card.Title as="div">
                         <strong>{product.name}</strong>
                     </Card.Title>
-                </a>
+                </Link>
 
                 <Card.Text as="h3" className="pt-5 price-product-color">
                     {product.price}$
