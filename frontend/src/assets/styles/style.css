@@ -3,7 +3,14 @@
 }
 
 
-/* product cards  */
+/* Product component  */
+.product-title{
+    height: 2.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+}
 .bg-product-card{
     background-color: rgb(244, 242, 242);
 }
@@ -11,7 +18,15 @@
     color:#5c5c5c ;
 }
 
+/* Header component */
+
 .custom-navbar {
     background-color:#F5F5F7;
 
+  }
+
+  /* Rating component */
+  .star-color {
+    color: #ffc107 !important; /* Yellow color */
+    margin-right: 2px;
   }
