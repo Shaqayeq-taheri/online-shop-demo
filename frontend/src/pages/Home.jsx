@@ -1,20 +1,23 @@
-import {Row, Col} from 'react-bootstrap'
-import products from '../../products'
-import Product from '../components/Product'
+import { Row, Col } from "react-bootstrap";
+import products from "../../products";
+import Product from "../components/Product";
 
 function Home() {
-  return (
-      <>
-          <h1>Latest Products</h1>
-          <Row className="g-4">
-              {products.map((product) => (
-                  <Col key={product._id} sm={12} md={8} lg={4} xl={3}>
-                      <Product product={product} />
-                  </Col>
-              ))}
-          </Row>
-      </>
-  );
+    return (
+        <>
+            <h1>Latest Products</h1>
+            <Row className="g-4">
+                {products.map((product) => (
+                    <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
+                        <Product product={product} />
+                    </Col>
+                ))}
+            </Row>
+        </>
+    );
 }
 
-export default Home
+export default Home;
+
+//Bootstrap's grid has 12 columns per row. You assign how many of those 12 columns each item should take depending on screen size
+//xs 12/12 means 1 item per a row, md 6/12 means 2 items per row

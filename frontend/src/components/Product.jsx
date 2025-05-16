@@ -5,14 +5,15 @@ import Rating from "./Rating";
 function Product({ product }) {
     return (
         <Card
-            className="shadow-lg p-3 mt-5  rounded bg-product-card"
-            style={{ height: "100%" }}
+            className="shadow-lg p-3 mt-5 mb-5  rounded bg-product-card"
+
         >
             <Link to={`/product/${product._id}`}>
                 <Card.Img
                     src={product.image}
                     variant="top"
-                    style={{ objectFit: "contain", height: "200px" }}
+                    className="rounded"
+                    
                 />
             </Link>
 
