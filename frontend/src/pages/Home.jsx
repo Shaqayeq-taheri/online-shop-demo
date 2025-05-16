@@ -5,7 +5,8 @@ import Product from "../components/Product";
 function Home() {
     return (
         <>
-            <h1>Latest Products</h1>
+        <h1>Welcome to DigiShop</h1>
+            <h3>Latest Products</h3>
             <Row className="g-4">
                 {products.map((product) => (
                     <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
