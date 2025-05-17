@@ -11,46 +11,47 @@ function ProductDetails() {
   console.log(product)
     return (
         <div className="mt-5 mb-5">
-
-
-            <Link className="btn btn-light my-3" to="/">
+            <Link className="btn btn-light mb-3" to="/">
                 <FaArrowLeft />
                 Go Back
             </Link>
             <Row>
-                <Col xs={12} md={5} lg={5} className="mb-4">
-                    <div className="bg-light p-3 rounded-3 h-100 d-flex align-items-center justify-content-center">
+                <Col xs={12} md={6} lg={4} className="mb-4">
+                    <div className="h-100 bg-light p-3 rounded-3 d-flex align-items-center justify-content-center">
                         <Image
                             src={product.image}
                             alt={product.name}
                             fluid
-                            className="product-img"
-                            style={{ maxHeight: "400px", objectFit: "contain" }}
+                            style={{ objectFit: "contain" }}
                         />
                     </div>
                 </Col>
-                <Col xs={12} md={4} lg={4} className="mb-4">
-                    <ListGroup variant="flush" className="border rounded-3">
-                        <ListGroup.Item>
-                            <h3>{product.name}</h3>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            <Rating
-                                value={product.rating}
-                                text={product.numReviews}
-                            />
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            Price: {product.price} $
-                        </ListGroup.Item>
-                        <ListGroup.Item>{product.description}</ListGroup.Item>
-                    </ListGroup>
+                <Col xs={12} md={6} lg={4} className="mb-4">
+                    <div className="bg-light p-3 rounded-3">
+                        <ListGroup variant="flush">
+                            <ListGroup.Item className="border-0 bg-transparent py-3">
+                                <h3 className="mb-2">{product.name}</h3>
+                            </ListGroup.Item>
+                            <ListGroup.Item className="border-0 bg-transparent py-2">
+                                <Rating
+                                    value={product.rating}
+                                    text={`${product.numReviews} reviews`}
+                                />
+                            </ListGroup.Item>
+                            <ListGroup.Item className="border-0 bg-transparent py-2">
+                                <h4 className="text-muted">${product.price}</h4>
+                            </ListGroup.Item>
+                            <ListGroup.Item className="border-0 bg-transparent pt-2 pb-3">
+                                <p className="mb-0">{product.description}</p>
+                            </ListGroup.Item>
+                        </ListGroup>
+                    </div>
                 </Col>
 
-                <Col xs={12} lg={3}>
-                    <Card className="shadow-sm">
+                <Col xs={12} lg={4}>
+                    <Card className="shadow-sm  bg-light">
                         <ListGroup variant="flush">
-                            <ListGroup.Item className="py-3">
+                            <ListGroup.Item className="py-3 bg-light">
                                 <Row>
                                     <Col className="fw-bold">Price:</Col>
                                     <Col className="text-end fs-4">
