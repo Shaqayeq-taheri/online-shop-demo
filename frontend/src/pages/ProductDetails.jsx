@@ -1,14 +1,29 @@
 import { useParams,Link } from "react-router-dom"  //for getting the id from url
-import products from "../../products"
 import { FaArrowLeft } from "react-icons/fa";
 import {Row,Col, ListGroup, Card, Image} from 'react-bootstrap'
 import Rating from '../components/Rating'
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 
 function ProductDetails() {
+
+    const [product, setProduct]= useState({})
     const {id:productId}= useParams()
-    const product = products.find((p)=> p._id===productId) //find in products array the ps that their id is equal to productId(coming from url)
-  console.log(product)
+    
+  
+  useEffect(()=>{
+
+    const fetchData = async ()=>{
+        
+        const {data} = await axios.get(`/api/products/${productId}`)
+        const product = 
+        setProduct(data)
+    }
+    fetchData()
+
+  },[productId])
+    console.log(product)
     return (
         <div className="mt-5 mb-5">
             <Link className="btn btn-light mb-3" to="/">

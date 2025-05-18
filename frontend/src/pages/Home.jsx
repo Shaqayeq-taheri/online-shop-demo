@@ -1,6 +1,6 @@
 import { Row, Col } from "react-bootstrap";
 import axios from 'axios'
-import Product from "../components/Product";
+import ProductCard from "../components/ProductCard";
 import { useState, useEffect } from "react";
 
 
@@ -30,7 +30,7 @@ function Home() {
             <Row className="g-4">
             {products.map((product) => (
                     <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
-                        <Product product={product} />
+                        <ProductCard product={product} />
                     </Col>))}
             </Row>
         </>
