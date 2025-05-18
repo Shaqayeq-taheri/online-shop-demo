@@ -2,11 +2,14 @@ import express from 'express'
 import products from './data/products.js'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import connetDB from './config/db.js'
 
 dotenv.config()
 
+
 const port = process.env.PORT || 5000
 
+connetDB() //connect to DB
 const app= express()
 
 app.use(cors())
