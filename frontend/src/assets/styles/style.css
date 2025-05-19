@@ -6,6 +6,7 @@
 
 /* Product component  */
 .product-title{
+    color: rgb(61, 61, 61);
     height: 2.5em;
     overflow: hidden;
     text-overflow: ellipsis;

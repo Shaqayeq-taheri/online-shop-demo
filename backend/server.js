@@ -10,6 +10,8 @@ dotenv.config()
 const port = process.env.PORT || 5000
 
 connetDB() //connect to DB
+
+
 const app= express()
 
 app.use(cors())
