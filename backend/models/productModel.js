@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import reviewSchema from './reviewModel.js'
 
 const productSchema = new mongoose.Schema({
     user: {
@@ -26,7 +27,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    reviews: [reviewSchema], //connecting to review schema
+    reviews:  [reviewSchema],//connecting to review schema, the reason that is an array because one product can have several reviews 
     rating: {
         type: Number,
         required: true,

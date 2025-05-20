@@ -17,7 +17,7 @@ const app= express()
 app.use(cors())
 
 app.get('/', (req,res)=>{
-    res.send('Api is running..')
+    res.send('Api is running.. ')
 })
 
 app.get('/api/products', (req,res)=>{
@@ -29,4 +29,4 @@ app.get('/api/products/:id', (req, res)=>{
     res.json(product)
 })
 
-app.listen(port, ()=> console.log(`the server is running on port ${port}`))
+app.listen(port, ()=> console.log(`the server is running on port ${port} 👍`))
