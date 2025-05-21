@@ -5,15 +5,20 @@
     "type": "module",
     "scripts": {
         "start": "node backend/server.js",
-        "dev": "nodemon backend/server.js"
+        "dev": "nodemon backend/server.js",
+        "data:import":"node backend/seeder.js",
+        "data:destroy":"node backend/seeder.js -d"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "description": "",
     "dependencies": {
+        "bcryptjs": "^3.0.2",
+        "colors": "^1.4.0",
         "cors": "^2.8.5",
         "express": "^5.1.0",
+        "http-status-codes": "^2.3.0",
         "mongoose": "^8.15.0"
     },
     "devDependencies": {
