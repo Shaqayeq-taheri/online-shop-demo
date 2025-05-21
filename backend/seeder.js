@@ -22,10 +22,13 @@ const importData = async ()=>{
 
         const createUser = await User.insertMany(users)
 
-        const adminUser = await createUser[0]._id
+        const adminUser =  createUser[0]._id
 
+
+        /* Creates a new object with all the original product properties (...product spread operator)
+        Adds a new user field containing the adminUser's ID (_id) */
         const sampleProducts = products.map((product)=>{
-            return {...product, user:adminUser}
+            return { ...product, user: adminUser };
         })
 
         await Product.insertMany(sampleProducts)

@@ -1,4 +1,5 @@
 import Product from "../models/productModel.js";
+import { StatusCodes } from "http-status-codes";
 
 // @desc add a product 
 // @route /api/products/addProduct
@@ -49,10 +50,10 @@ export const createProduct = async (req, res) => {
 export const getAllProducts = async(req, res) => {
     try {
         const products = await Product.find({});
-        res.status(200).json(products);
+        res.status(StatusCodes.OK).json(products);
       } catch (error) {
         console.error('Error fetching products:', error);
-        res.status(500).json({ message: 'Server error while fetching products' });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Server error while fetching products' });
       }
 };
 
@@ -63,7 +64,7 @@ export const getAllProducts = async(req, res) => {
 // @access public
 
 export const getProductById = async(req, res) => {
-    /* try {
+    try {
         const product = await Product.findById(req.params.id);
 
         if (product) {
@@ -84,5 +85,5 @@ export const getProductById = async(req, res) => {
         res.status(500).json({
             message: "Server error while fetching product",
         });
-    } */
+    }
 };
