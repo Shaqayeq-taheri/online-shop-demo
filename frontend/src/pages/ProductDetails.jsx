@@ -4,7 +4,11 @@ import { Row, Col, ListGroup, Card, Image, Button } from "react-bootstrap";
 import Rating from "../components/Rating";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setProduct, setLoading, setError } from "../../redux/slices/productSlice";
+import {
+    setProduct,
+    setLoading,
+    setError,
+} from "../../redux/slices/productSlice";
 import axios from "axios";
 
 
@@ -34,65 +38,88 @@ function ProductDetails() {
     }, [productId, dispatch]);
 
     return (
-        <>
+        <div className="py-3">
             <Link className="btn btn-light my-3" to="/">
                 <FaArrowLeft /> Go Back
             </Link>
 
             {loading ? (
-       <p>loading..</p>
+                <p>loading the page ...</p>
             ) : error ? (
-           <p>error occurred</p>
+                <p variant="danger">{error}</p>
             ) : product ? (
                 <Row>
-                    <Col md={6}>
-                        <Image src={product.image} alt={product.name} fluid />
+                    {/* Product Image Column */}
+                    <Col xs={12} md={5} lg={5} className="mb-4">
+                        <div
+                            className="p-3 border rounded bg-light d-flex justify-content-center align-items-center"
+                            style={{ minHeight: "400px" }}
+                        >
+                            <Image
+                                src={product.image}
+                                alt={product.name}
+                                fluid
+                                style={{
+                                    maxHeight: "100%",
+                                    maxWidth: "100%",
+                                    objectFit: "contain",
+                                }}
+                            />
+                        </div>
                     </Col>
-                    <Col md={3}>
-                        <ListGroup variant="flush">
-                            <ListGroup.Item>
-                                <h3>{product.name}</h3>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <Rating
-                                    value={product.rating}
-                                    text={`${product.numReviews} reviews`}
-                                />
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                Price: ${product.price}
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                Description: {product.description}
+
+                    {/* Product Details Column */}
+                    <Col xs={12} md={6} lg={4} className="mb-4">
+                        <ListGroup variant="flush" className="border rounded">
+                            <ListGroup.Item className="p-3">
+                                <h2 className="mb-3">{product.name}</h2>
+                                <div className="mb-3">
+                                    <Rating
+                                        value={product.rating}
+                                        text={`${product.numReviews} reviews`}
+                                    />
+                                </div>
+                                <h4 className="mb-3">
+                                    Price: ${product.price}
+                                </h4>
+                                <p className="mb-0">{product.description}</p>
                             </ListGroup.Item>
                         </ListGroup>
                     </Col>
-                    <Col md={3}>
-                        <Card>
+
+                    {/* Add to Cart Column */}
+                    <Col lg={3} className="mb-4">
+                        <Card className="shadow-sm">
                             <ListGroup variant="flush">
-                                <ListGroup.Item>
+                                <ListGroup.Item className="p-3">
                                     <Row>
                                         <Col>Price:</Col>
-                                        <Col>
+                                        <Col className="text-end">
                                             <strong>${product.price}</strong>
                                         </Col>
                                     </Row>
                                 </ListGroup.Item>
-                                <ListGroup.Item>
+                                <ListGroup.Item className="p-3">
                                     <Row>
                                         <Col>Status:</Col>
-                                        <Col>
-                                            {product.countInStock > 0
-                                                ? "In Stock"
-                                                : "Out Of Stock"}
+                                        <Col className="text-end">
+                                            {product.countInstock > 0 ? (
+                                                <span className="text-success">
+                                                    In Stock
+                                                </span>
+                                            ) : (
+                                                <span className="text-danger">
+                                                    Out of Stock
+                                                </span>
+                                            )}
                                         </Col>
                                     </Row>
                                 </ListGroup.Item>
-                                <ListGroup.Item>
+                                <ListGroup.Item className="p-3">
                                     <Button
-                                        className="btn-block"
-                                        type="button"
-                                        disabled={product.countInStock === 0}
+                                        variant="dark"
+                                        className="w-100 py-2"
+                                        disabled={product.countInstock === 0}
                                     >
                                         Add To Cart
                                     </Button>
@@ -104,7 +131,7 @@ function ProductDetails() {
             ) : (
                 <p variant="info">Product not found</p>
             )}
-        </>
+        </div>
     );
 }
 

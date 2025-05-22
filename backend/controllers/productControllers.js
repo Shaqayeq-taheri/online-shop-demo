@@ -75,13 +75,6 @@ export const getProductById = async(req, res) => {
     } catch (error) {
         console.error("Error fetching product:", error);
 
-        // Handle invalid ObjectId error
-        if (error.kind === "ObjectId") {
-            return res
-                .status(400)
-                .json({ message: "Invalid product ID format" });
-        }
-
         res.status(500).json({
             message: "Server error while fetching product",
         });

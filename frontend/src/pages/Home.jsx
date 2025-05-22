@@ -20,6 +20,7 @@ function Home() {
                 const { data } = await axios.get(
                     "/api/products/getAllProducts"
                 );
+                console.log('the list of products',data)
                 dispatch(setProducts(data));
             } catch (error) {
                 dispatch(setError(error.message));
