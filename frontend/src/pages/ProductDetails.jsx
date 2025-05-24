@@ -10,6 +10,8 @@ import {
     setError,
 } from "../../redux/slices/productSlice";
 import axios from "axios";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 
 function ProductDetails() {
@@ -44,9 +46,9 @@ function ProductDetails() {
             </Link>
 
             {loading ? (
-                <p>loading the page ...</p>
+              <Loader/>
             ) : error ? (
-                <p variant="danger">{error}</p>
+                <Message variant={danger}>Error: {error}</Message>
             ) : product ? (
                 <Row>
                     {/* Product Image Column */}
