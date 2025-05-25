@@ -1,6 +1,7 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams,useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { Row, Col, ListGroup, Card, Image, Button } from "react-bootstrap";
+import { Form,Row, Col, ListGroup, Card, Image, Button } from "react-bootstrap";
 import Rating from "../components/Rating";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +10,7 @@ import {
     setLoading,
     setError,
 } from "../../redux/slices/productSlice";
+import {addToCart} from '../../redux/slices/cartSlice'
 import axios from "axios";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -18,6 +20,8 @@ function ProductDetails() {
     const { id: productId } = useParams();
     const dispatch = useDispatch();
     const { product, loading, error } = useSelector((state) => state.product);
+    const [quantity, setQuantity]= useState(1)
+    const navigate= useNavigate()
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -38,6 +42,15 @@ function ProductDetails() {
 
         fetchProduct();
     }, [productId, dispatch]);
+
+
+    const addToCartHandler = ()=>{
+        dispatch(addToCart({...product, quantity}))
+        navigate('/cart')
+
+    }
+    console.log('the list of added products',product)
+    console.log('the number of added product',quantity)
 
     return (
         <div className="py-3">
@@ -117,11 +130,28 @@ function ProductDetails() {
                                         </Col>
                                     </Row>
                                 </ListGroup.Item>
+                                {product.countInstock > 0 && (
+                                    <ListGroup.Item>
+                                        <Row>
+                                            <Col>Select the quantity</Col>
+                                            <Col><Form.Control as='select' value={quantity}
+                                            onChange={(e)=>setQuantity(Number(e.target.value))}>
+                                                {
+                                                    [...Array(product.countInstock).keys()].map((x)=>(
+                                                        <option key={x+1} value={x+1}>
+                                                                    {x+1}
+                                                        </option>
+                                                    ))  //creates an array with the size of the number of products, because we do not want to someone order a product which is more that numberinstock
+                                                }</Form.Control></Col>
+                                        </Row>
+                                    </ListGroup.Item>
+                                )}
                                 <ListGroup.Item className="p-3">
                                     <Button
                                         variant="dark"
                                         className="w-100 py-2"
                                         disabled={product.countInstock === 0}
+                                        onClick={addToCartHandler}
                                     >
                                         Add To Cart
                                     </Button>
