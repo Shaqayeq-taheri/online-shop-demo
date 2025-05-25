@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = localStorage.getItem("cart")
-    ? JSON.parse(localStorage.getItem("cart"))
-    : { cartItems: [] };
+    ? JSON.parse(localStorage.getItem("cart")) //if there is an item in cart, parse the Json to an object
+    : { cartItems: [] }; //if there is not, create an empty items array
 
 /* helper function for 2 decimal number */
 
 const addDecimals = (num) => {
-    return (Math.round(num * 100) / 100).toFixed(2);
+    return (Math.round(num * 100) / 100).toFixed(2); //Rounds numbers to 2 decimal places
 };
 
 const cartSlice = createSlice({
@@ -17,8 +17,9 @@ const cartSlice = createSlice({
         addToCart: (state, action) => {
             //state the current state of cart
             //action include any data inside payload (here the items that are sending to cart)
-            const item = action.payload;
+            const item = action.payload; //Gets the item from action payload
 
+            //Checks if item already exists in cart
             const existedItem = state.cartItems.find((x) => x._id === item._id); //current id is equal to payload id
             //update the quantity
             if (existedItem) {
@@ -39,7 +40,7 @@ const cartSlice = createSlice({
             state.shippingPrice = addDecimals(state.itemsPrice > 50 ? 0 : 5);
 
             /* tax price  19%*/
-            state.taxPrice = addDecimals(Number(itemsPrice * 0.19).toFixed(2));
+            state.taxPrice = addDecimals(Number(state.itemsPrice * 0.19).toFixed(2));
 
             /* total price */
 
@@ -49,7 +50,7 @@ const cartSlice = createSlice({
                 Number(state.taxPrice)
             ).toFixed(2);
 
-            /* add to local storage */
+            /* save the entire state to local storage */
 
             localStorage.setItem("cart", JSON.stringify(state));
         },
