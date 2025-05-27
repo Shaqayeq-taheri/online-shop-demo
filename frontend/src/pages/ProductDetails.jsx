@@ -134,7 +134,7 @@ function ProductDetails() {
                                     <ListGroup.Item>
                                         <Row>
                                             <Col>Select the quantity</Col>
-                                            <Col><Form.Control as='select' value={quantity}
+                                            <Col><Form.Select as='select' value={quantity}
                                             onChange={(e)=>setQuantity(Number(e.target.value))}>
                                                 {
                                                     [...Array(product.countInstock).keys()].map((x)=>(
@@ -142,7 +142,7 @@ function ProductDetails() {
                                                                     {x+1}
                                                         </option>
                                                     ))  //creates an array with the size of the number of products, because we do not want to someone order a product which is more that numberinstock
-                                                }</Form.Control></Col>
+                                                }</Form.Select></Col>
                                         </Row>
                                     </ListGroup.Item>
                                 )}
