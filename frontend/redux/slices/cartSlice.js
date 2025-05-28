@@ -1,14 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { updateCart } from "../../src/utils/cartUtils";
 
 const initialState = localStorage.getItem("cart")
     ? JSON.parse(localStorage.getItem("cart")) //if there is an item in cart, parse the Json to an object
     : { cartItems: [] }; //if there is not, create an empty items array
 
 /* helper function for 2 decimal number */
-
-const addDecimals = (num) => {
-    return (Math.round(num * 100) / 100).toFixed(2); //Rounds numbers to 2 decimal places
-};
 
 const cartSlice = createSlice({
     name: "cart",
@@ -29,36 +26,20 @@ const cartSlice = createSlice({
             } else {
                 state.cartItems = [...state.cartItems, item];
             }
-            /* calculating item price */
-            state.itemsPrice = addDecimals(
-                state.cartItems.reduce(
-                    (acc, item) => acc + item.price * item.quantity,
-                    0
-                )
-            );
-            /* shipping price  */
-            state.shippingPrice = addDecimals(state.itemsPrice > 50 ? 0 : 5);
 
-            /* tax price  19%*/
-            state.taxPrice = addDecimals(Number(state.itemsPrice * 0.19).toFixed(2));
-
-            /* total price */
-
-            state.totalPrice = (
-                Number(state.itemsPrice) +
-                Number(state.shippingPrice) +
-                Number(state.taxPrice)
-            ).toFixed(2);
-
-            /* save the entire state to local storage */
-
-            localStorage.setItem("cart", JSON.stringify(state));
+            return updateCart(state);
+        },
+        removeFromCart: (state, action) => {
+            state.cartItems = state.cartItems.filter(
+                (x) => x._id !== action.payload
+            ); // return the cartItems that their id is not equel to action(action is the item that we want to delete)
+            return updateCart(state);
         },
     },
 });
 
 //in order to use this addToCart reducer, we need to export it as an action
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, removeFromCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

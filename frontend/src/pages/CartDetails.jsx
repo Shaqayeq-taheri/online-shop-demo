@@ -1,7 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../redux/slices/cartSlice";
-import { Col, Row, ListGroup, Image, Form, Button,Card } from "react-bootstrap";
+import { addToCart, removeFromCart } from "../../redux/slices/cartSlice";
+import {
+    Col,
+    Row,
+    ListGroup,
+    Image,
+    Form,
+    Button,
+    Card,
+} from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import Message from "../components/Message";
 
@@ -12,9 +20,15 @@ function CartDetails() {
     const cart = useSelector((state) => state.cart);
     const { cartItems } = cart;
 
-    const addToCartHandler =async (product, quantity)=>{
-        dispatch(addToCart({...product,quantity}))
-       
+    const addToCartHandler = async (product, quantity) => {
+        dispatch(addToCart({ ...product, quantity }));
+    };
+    const removeFromCartHandler = async (id) => {
+        dispatch(removeFromCart(id));
+    };
+
+    const checkOutHandler =async()=>{
+        navigate('/login?redirect=/shipping')  //if the user is logged in redirects to shipping page
     }
 
     return (
@@ -69,7 +83,12 @@ function CartDetails() {
                                     <Col md={2}>
                                         <Form.Select
                                             value={item.quantity}
-                                            onChange={(e) => {addToCartHandler(item,Number(e.target.value))}}
+                                            onChange={(e) => {
+                                                addToCartHandler(
+                                                    item,
+                                                    Number(e.target.value)
+                                                );
+                                            }}
                                             className="shadow-sm"
                                         >
                                             {[
@@ -91,6 +110,9 @@ function CartDetails() {
                                             variant="light"
                                             className="rounded shadow-sm"
                                             title="Remove from cart"
+                                            onClick={() =>
+                                                removeFromCartHandler(item._id)
+                                            }
                                         >
                                             <FaTrash />
                                         </Button>
@@ -102,19 +124,38 @@ function CartDetails() {
                 )}
             </Col>
             <Col md={4}>
-            <Card>
-                <ListGroup variant="flush">
-                <ListGroup.Item>
-                    <h3>
-                        Subtotal ({cartItems.reduce((acc,item)=>item.quantity +acc,0)}) Items
-                    </h3>
-                    {cartItems.reduce((acc,item)=>item.quantity * item.price+ acc,0).toFixed(2)}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                    <Button type="button" variant="dark" className="btn-block" disabled={cartItems.length===0}>Proceed to checkout</Button>
-                </ListGroup.Item>
-                </ListGroup>
-            </Card>
+                <Card>
+                    <ListGroup variant="flush">
+                        <ListGroup.Item>
+                            <h3>
+                                Subtotal (
+                                {cartItems.reduce(
+                                    (acc, item) => item.quantity + acc,
+                                    0
+                                )}
+                                ) Items
+                            </h3>
+                            {cartItems
+                                .reduce(
+                                    (acc, item) =>
+                                        item.quantity * item.price + acc,
+                                    0
+                                )
+                                .toFixed(2)}
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                            <Button
+                                type="button"
+                                variant="dark"
+                                className="btn-block"
+                                disabled={cartItems.length === 0}
+                                onClick={()=>checkOutHandler}
+                            >
+                                Proceed to checkout
+                            </Button>
+                        </ListGroup.Item>
+                    </ListGroup>
+                </Card>
             </Col>
         </Row>
     );
