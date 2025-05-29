@@ -33,9 +33,8 @@ export const signinUser = async (req, res) => {
                 .json({ message: "The email or password is not correct" });
         }
 
-        generateJwtToken(user, res);
 
-/* 
+
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1d",
         });
@@ -47,11 +46,12 @@ export const signinUser = async (req, res) => {
             sameSite: "strict",
             maxAge: 1 * 24 * 60 * 60 * 1000, //1 day
         });
- */
+ 
 
         return res
             .status(StatusCodes.OK)
             .json({ user, message: "The user logged in successfully" });
+
     } catch (error) {
         return res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -85,12 +85,25 @@ export const signupUser = async (req, res) => {
     }
 };
 
+
+
+
 // @desc user signout //clearing the cookie because json webtoken stored in httponly cookie on the server
 // @route  POST api/users/signout
 // @access  private(the user need to be logged in)
 export const signoutUser = async (req, res) => {
-    res.send("sigout user");
+    //clear the cookie
+    res.cookie('jwt', '',{
+        httpOnly:'true',
+        expiresIn: new Date(0)
+    })
+    return res
+        .status(StatusCodes.OK)
+        .json({ message: "User signed out successfully" });
 };
+
+
+
 
 // @desc user profile
 // @route  GET api/users/userProfile
@@ -98,6 +111,11 @@ export const signoutUser = async (req, res) => {
 export const getUserProfile = async (req, res) => {
     res.send("the user profile");
 };
+
+
+
+
+
 
 // @desc userprofile update
 // @route  PUT api/users/userProfileUpdate    //you don't need :id because the server already knows who the user is using JWT
