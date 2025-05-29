@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { generateJwtToken } from "../helpers/jwt.js";
 
 // @desc user signin
 // @route  POST api/users/signin
@@ -32,6 +33,9 @@ export const signinUser = async (req, res) => {
                 .json({ message: "The email or password is not correct" });
         }
 
+        generateJwtToken(user, res);
+
+/* 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1d",
         });
@@ -43,6 +47,8 @@ export const signinUser = async (req, res) => {
             sameSite: "strict",
             maxAge: 1 * 24 * 60 * 60 * 1000, //1 day
         });
+ */
+
         return res
             .status(StatusCodes.OK)
             .json({ user, message: "The user logged in successfully" });

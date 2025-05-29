@@ -11,19 +11,23 @@ import {
     deleteUser,
 } from "../controllers/userControllers.js";
 
+import { authenticate, admin } from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 
 //public routes
 router.post("/signup", signupUser);
 router.post("/signin", signinUser);
 router.post("/signout", signoutUser);
-router.get("/getUserProfile", getUserProfile);
-router.put("/updateUserProfile", updateUserProfile);
 
-//private routes(admin)
-router.get("/getAllUsers", getAllUsers);
-router.get("/getUserById/:id", getUserById);
-router.put("/updateUser/:id", updateUser);
-router.delete("/deleteUser/:id", deleteUser);
+//protected user routes
+router.get("/getUserProfile", authenticate, getUserProfile);
+router.put("/updateUserProfile", authenticate, updateUserProfile);
+
+//admin routes
+router.get("/getAllUsers", authenticate, admin, getAllUsers);
+router.get("/getUserById/:id", authenticate, admin, getUserById);
+router.put("/updateUser/:id", authenticate, admin, updateUser);
+router.delete("/deleteUser/:id", authenticate, admin, deleteUser);
 
 export default router;
