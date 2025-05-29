@@ -16,6 +16,7 @@ const app = express();
 
 app.use(cors());
 
+//body parser middleware in order to access to the body of req object
 app.use(express.json())
 
 app.get("/", (req, res) => {
