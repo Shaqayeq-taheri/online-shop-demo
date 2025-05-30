@@ -14,8 +14,8 @@ import User from '../models/userModel.js';
      }
 
      try {
-         const decoded = jwt.verify(token, process.env.JWT_SECRET); // ✅ verify token
-         req.user = await User.findById(decoded.userId).select("-password"); // optional: attach user
+         const decoded = jwt.verify(token, process.env.JWT_SECRET); // verify token
+         req.user = await User.findById(decoded.userId).select("-password"); // attach user
 
          next();
      } catch (error) {

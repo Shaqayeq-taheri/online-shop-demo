@@ -41,7 +41,7 @@ export const signinUser = async (req, res) => {
 
         //set jwt as an http-only cookie
         res.cookie("jwt", token, {
-            httpOnly: true,
+            httpOnly: true, //since it is true it means that The client browser stores jwt automatically as a cookie
             secure: process.env.NODE_ENV !== "development", //it means that in development it sends the cookies only to https
             sameSite: "strict",
             maxAge: 1 * 24 * 60 * 60 * 1000, //1 day
@@ -65,6 +65,10 @@ export const signinUser = async (req, res) => {
 export const signupUser = async (req, res) => {
     const { firstName, familyName, email, password } = req.body;
 
+    const userExists = await User.findOne({email})
+    if(userExists){
+        return res.status(StatusCodes.BAD_REQUEST).json({message:'This user is already existed'})
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
@@ -75,10 +79,30 @@ export const signupUser = async (req, res) => {
             password: hashedPassword,
         });
 
-        return res
-            .status(StatusCodes.CREATED)
-            .json({ message: "The user is created successfully!" });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+            expiresIn: "1d",
+        });
+
+        //set jwt as an http-only cookie
+        res.cookie("jwt", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== "development", 
+            sameSite: "strict",
+            maxAge: 1 * 24 * 60 * 60 * 1000, 
+        });
+
+        return res.status(StatusCodes.CREATED).json({
+            message: "The user is created and signed in successfully!",
+            user: {
+                _id: user._id,
+                firstName: user.firstName,
+                familyName: user.familyName,
+                email: user.email,
+                isAdmin: user.isAdmin,
+            },
+        });
     } catch (error) {
+        console.error("Signup error:", error);
         return res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ message: "An error occured while creating the user" });
