@@ -133,7 +133,34 @@ export const signoutUser = async (req, res) => {
 // @route  GET api/users/userProfile
 // @access  private
 export const getUserProfile = async (req, res) => {
-    res.send("the user profile");
+    
+    //since the user is signed in , we have access to the req.user._id
+
+    try {
+        const userId = req.user._id;
+
+        const user = await User.findById(userId);
+
+        if (user) {  //it means that if the user found with this id(in token) can have access to it's details
+            return res.status(StatusCodes.OK).json({
+                user: {
+                    _id: user._id,
+                    firstName: user.firstName,
+                    familyName: user.familyName,
+                    email: user.email,
+                    isAdmin: user.isAdmin,
+                },
+            });
+        } else {
+            return res
+                .status(StatusCodes.NOT_FOUND)
+                .json({ message: "User not found" });
+        }
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "Something went wrong while fetching user profile",
+        });
+    }
 };
 
 
