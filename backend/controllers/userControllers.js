@@ -8,9 +8,8 @@ import { generateJwtToken } from "../helpers/jwt.js";
 // @route  POST api/users/signin
 // @access  public
 export const signinUser = async (req, res) => {
-
     const { email, password } = req.body;
-    
+
     if (!email || !password) {
         return res
             .status(StatusCodes.BAD_REQUEST)
@@ -33,8 +32,6 @@ export const signinUser = async (req, res) => {
                 .json({ message: "The email or password is not correct" });
         }
 
-
-
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1d",
         });
@@ -46,12 +43,10 @@ export const signinUser = async (req, res) => {
             sameSite: "strict",
             maxAge: 1 * 24 * 60 * 60 * 1000, //1 day
         });
- 
 
         return res
             .status(StatusCodes.OK)
             .json({ user, message: "The user logged in successfully" });
-
     } catch (error) {
         return res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -65,9 +60,11 @@ export const signinUser = async (req, res) => {
 export const signupUser = async (req, res) => {
     const { firstName, familyName, email, password } = req.body;
 
-    const userExists = await User.findOne({email})
-    if(userExists){
-        return res.status(StatusCodes.BAD_REQUEST).json({message:'This user is already existed'})
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+        return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ message: "This user is already existed" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -86,9 +83,9 @@ export const signupUser = async (req, res) => {
         //set jwt as an http-only cookie
         res.cookie("jwt", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV !== "development", 
+            secure: process.env.NODE_ENV !== "development",
             sameSite: "strict",
-            maxAge: 1 * 24 * 60 * 60 * 1000, 
+            maxAge: 1 * 24 * 60 * 60 * 1000,
         });
 
         return res.status(StatusCodes.CREATED).json({
@@ -109,31 +106,24 @@ export const signupUser = async (req, res) => {
     }
 };
 
-
-
-
 // @desc user signout //clearing the cookie because json webtoken stored in httponly cookie on the server
 // @route  POST api/users/signout
 // @access  private(the user need to be logged in)
 export const signoutUser = async (req, res) => {
     //clear the cookie
-    res.cookie('jwt', '',{
-        httpOnly:'true',
-        expiresIn: new Date(0)
-    })
+    res.cookie("jwt", "", {
+        httpOnly: "true",
+        expiresIn: new Date(0),
+    });
     return res
         .status(StatusCodes.OK)
         .json({ message: "User signed out successfully" });
 };
 
-
-
-
 // @desc user profile
 // @route  GET api/users/userProfile
 // @access  private
 export const getUserProfile = async (req, res) => {
-    
     //since the user is signed in , we have access to the req.user._id
 
     try {
@@ -141,7 +131,8 @@ export const getUserProfile = async (req, res) => {
 
         const user = await User.findById(userId);
 
-        if (user) {  //it means that if the user found with this id(in token) can have access to it's details
+        if (user) {
+            //it means that if the user found with this id(in token) can have access to it's details
             return res.status(StatusCodes.OK).json({
                 user: {
                     _id: user._id,
@@ -163,16 +154,44 @@ export const getUserProfile = async (req, res) => {
     }
 };
 
-
-
-
-
-
 // @desc userprofile update
 // @route  PUT api/users/userProfileUpdate    //you don't need :id because the server already knows who the user is using JWT
 // @access  private
 export const updateUserProfile = async (req, res) => {
-    res.send("update the user profile");
+    try {
+
+    
+       const userUpdates ={
+            firstName : req.body.firstName,
+            familyName: req.body.familyName,
+            email: req.body.email
+
+        }
+        if (req.body.password) {
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            userUpdates.password = hashedPassword;
+        }
+
+        const user = await User.findByIdAndUpdate(req.user._id, userUpdates,{new:true});
+
+        if (user) {
+            return res.status(StatusCodes.OK).json({
+                message: "Profile updated successfully",
+                user: {
+                    _id: user._id,
+                    firstName: user.firstName,
+                    familyName: user.familyName,
+                    email: user.email,
+                    isAdmin: user.isAdmin,
+                },
+            });
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "Something went wrong while updating profile",
+        });
+    }
 };
 
 // @desc Get all users
