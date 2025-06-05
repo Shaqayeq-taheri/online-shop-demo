@@ -39,7 +39,7 @@ export const signinUser = async (req, res) => {
         //set jwt as an http-only cookie
         res.cookie("jwt", token, {
             httpOnly: true, //  It is an HTTP-only cookie (so it’s not visible to JavaScript), since it is true it means that The client browser stores jwt automatically as a cookie
-            secure: process.env.NODE_ENV !== "development", //it means that in development it sends the cookies only to https
+            secure: process.env.NODE_ENV !== "development", //in production - Only sent over HTTPS ,it means that in development it sends the cookies only to https
             sameSite: "strict",
             maxAge: 1 * 24 * 60 * 60 * 1000, //1 day
         });
