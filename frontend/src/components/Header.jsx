@@ -2,6 +2,7 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
+
 function Header() {
     return (
         <header>
@@ -24,7 +25,7 @@ function Header() {
                             <Link to="/cart" className="nav-link">
                                 <FaShoppingCart /> Cart
                             </Link>
-                            <Link to="/login" className="nav-link">
+                            <Link to="/signin" className="nav-link">
                                 <FaUser /> Login
                             </Link>
                         </Nav>
