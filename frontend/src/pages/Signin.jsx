@@ -1,43 +1,57 @@
-import {
-    Form,
-    Container,
-    Row,
-    Col,
-    Button,
-    FormGroup,
-    InputGroup,
-} from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { Form, Container, Row, Col, Button, InputGroup } from "react-bootstrap";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { setCredentials } from "../../redux/slices/userSlice";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
+import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function Signin() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation(); //useLocation returns an object
+    const searchParams = new URLSearchParams(location.search); //gets the query string (?redirect=/profile)
+    const redirect = searchParams.get("redirect") || "/"; //gets the value from the query like shipping or index page
 
-    const [error, setError] = useState(false);
+    const { currentUser } = useSelector((state) => state.user);
+
+    useEffect(() => {
+        if (currentUser) {
+            navigate(redirect);
+        }
+    }, [currentUser, redirect]);
+
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    
-    
-    // need to be done 
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+
         try {
             const response = await axios.post("/api/users/signin", {
                 email,
                 password,
             });
-            
-            dispatch(setCredentials(response.data))
+
+            dispatch(setCredentials(response.data));
+            navigate(redirect);
         } catch (error) {
+            toast.error(
+                error.response?.data?.message ||
+                    "Login failed. Please try again."
+            );
             setError(
                 error.response?.data?.message ||
                     "Login failed. Please try again."
             );
+        } finally {
+            setLoading(false);
         }
         console.log("submit");
     };
@@ -49,12 +63,6 @@ function Signin() {
                     <div className="p-4 rounded shadow-lg border mb-5 bg-body-tertiary">
                         <h2 className="mb-4 text-center">Sign In</h2>
 
-                        {error && (
-                            <Alert variant="danger" className="mb-4">
-                                {error}
-                            </Alert>
-                        )}
-
                         <Form onSubmit={handleFormSubmit}>
                             <Form.Group controlId="formEmail" className="mb-4">
                                 <Form.Label>Email Address</Form.Label>
@@ -64,9 +72,7 @@ function Signin() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="rounded-3"
-                                 
                                 />
-                          
                             </Form.Group>
 
                             <Form.Group
@@ -85,7 +91,6 @@ function Signin() {
                                             setPassword(e.target.value)
                                         }
                                         className="rounded-start-3"
-                                        
                                     />
                                     <InputGroup.Text
                                         onClick={() =>
@@ -100,24 +105,18 @@ function Signin() {
                                             <FaEye />
                                         )}
                                     </InputGroup.Text>
-                                   
                                 </InputGroup>
                             </Form.Group>
-
-                            
 
                             <Button
                                 type="submit"
                                 variant="dark"
                                 className="w-100 rounded-3 mb-3 py-2"
-                            
+                                disabled={loading}
                             >
-                              Sign In
+                                Sign In
                             </Button>
-
-                            
-
-                            
+                            {loading && <Loader />}
                         </Form>
 
                         <div className="text-center mt-4">

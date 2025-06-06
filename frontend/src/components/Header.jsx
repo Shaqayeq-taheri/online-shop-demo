@@ -26,7 +26,7 @@ function Header() {
                                 <FaShoppingCart /> Cart
                             </Link>
                             <Link to="/signin" className="nav-link">
-                                <FaUser /> Login
+                                <FaUser /> Sign In
                             </Link>
                         </Nav>
                     </Navbar.Collapse>
