@@ -1,15 +1,34 @@
 import { Navbar, Nav, Container, NavDropdown, Badge } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector , useDispatch} from "react-redux";
+import {signout} from '../../redux/slices/userSlice'
+import axios from 'axios'
+
+
 
 function Header() {
     const { cartItems } = useSelector((state) => state.cart);
     const { currentUser } = useSelector((state) => state.user);
 
-    const signOutHandler =()=>{
-        console.log('sign out')
-    }
+    const dispatch = useDispatch()
+
+    const navigate = useNavigate()
+
+    const signOutHandler = async () => {
+        try {
+            // call backend to clear cookie
+            await axios.post(
+                "/api/users/signout",
+                {},
+                { withCredentials: true }
+            );
+            dispatch(signout()); // clear localStorage
+            navigate("/signin");
+        } catch (error) {
+            console.error("Logout failed", error);
+        }
+    };
     return (
         <header>
             <Navbar
@@ -44,16 +63,20 @@ function Header() {
                                     title={`${currentUser.user.firstName} ${currentUser.user.familyName}`}
                                     id="username"
                                 >
-                                    <Link to="profile">
-                                        <NavDropdown.Item>
+                                    
+                                        <NavDropdown.Item
+                                            as={Link}
+                                            to="/profile"
+                                        >
                                             Profile
                                         </NavDropdown.Item>
                                         <NavDropdown.Item
+                                            as={Link}
                                             onClick={signOutHandler}
                                         >
                                             Sign Out
                                         </NavDropdown.Item>
-                                    </Link>
+                                    
                                 </NavDropdown>
                             ) : (
                                 <Link to="/signin" className="nav-link">

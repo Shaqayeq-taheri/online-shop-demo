@@ -16,7 +16,8 @@ const userSlice = createSlice({
             localStorage.setItem("currentUser", JSON.stringify(action.payload));
         },
         signout: (state) => {
-            (state.currentUser = null), localStorage.removeItem("currentUser");
+            state.currentUser = null,
+            localStorage.removeItem("currentUser");
         },
     },
 });
