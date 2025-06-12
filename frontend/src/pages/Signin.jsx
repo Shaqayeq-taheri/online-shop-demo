@@ -2,7 +2,7 @@ import { Form, Container, Row, Col, Button, InputGroup } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { setCredentials } from "../../redux/slices/userSlice";
+import { signin } from "../../redux/slices/userSlice";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -39,7 +39,7 @@ function Signin() {
                 password,
             });
 
-            dispatch(setCredentials(response.data));
+            dispatch(signin(response.data));
             navigate(redirect);
         } catch (error) {
             toast.error(
