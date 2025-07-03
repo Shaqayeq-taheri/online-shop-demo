@@ -3,9 +3,9 @@ import { updateCart } from "../../src/utils/cartUtils";
 
 const initialState = localStorage.getItem("cart")
     ? JSON.parse(localStorage.getItem("cart")) //if there is an item in cart, parse the Json to an object
-    : { cartItems: [] }; //if there is not, create an empty items array
+    : { cartItems: [],shippingAddress:{}, paymentMethod :'paypal'}; //if there is not, create an empty items array
 
-/* helper function for 2 decimal number */
+
 
 const cartSlice = createSlice({
     name: "cart",
@@ -35,11 +35,15 @@ const cartSlice = createSlice({
             ); // return the cartItems that their id is not equel to action(action is the item that we want to delete)
             return updateCart(state);
         },
+        saveShippingAddress:(state,action)=>{
+            state.shippingAddress = action.payload
+            return updateCart(state)
+        }
     },
 });
 
 //in order to use this addToCart reducer, we need to export it as an action
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart,saveShippingAddress } = cartSlice.actions;
 
 export default cartSlice.reducer;

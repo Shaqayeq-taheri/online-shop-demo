@@ -144,6 +144,7 @@ function CartDetails() {
                                 .toFixed(2)}
                         </ListGroup.Item>
                         <ListGroup.Item>
+                            <Link to='/shipping'>
                             <Button
                                 type="button"
                                 variant="dark"
@@ -153,6 +154,7 @@ function CartDetails() {
                             >
                                 Proceed to checkout
                             </Button>
+                            </Link>
                         </ListGroup.Item>
                     </ListGroup>
                 </Card>
