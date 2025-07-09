@@ -19,6 +19,7 @@ import Signin from "./pages/Signin.jsx";
 import Signup from "./pages/signup.jsx";
 import Shipping from "./pages/Shipping.jsx";
 import PrivateRoutes from "./components/PrivateRoutes.jsx";
+import Payment from "./pages/Payment.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
             <Route path="/signup" element={<Signup />} />
             <Route path="" element={<PrivateRoutes />}>
                 <Route path="/shipping" element={<Shipping />} />
+                <Route path="/payment" element={<Payment />} />
             </Route>
         </Route>
     )

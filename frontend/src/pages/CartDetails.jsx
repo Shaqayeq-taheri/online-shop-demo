@@ -32,7 +32,9 @@ function CartDetails() {
     }
 
     return (
-        <div style={{ minHeight: "400px" }}>
+        <div
+          
+        >
             <Row className="justify-content-center">
                 <h1 className="mt-5 mb-4 ">Shopping Cart</h1>
                 <Col md={8}>
@@ -155,7 +157,7 @@ function CartDetails() {
                                         variant="dark"
                                         className="btn-block"
                                         disabled={cartItems.length === 0}
-                                        onClick={() => checkOutHandler}
+                                        onClick={ checkOutHandler}
                                     >
                                         Proceed to checkout
                                     </Button>
