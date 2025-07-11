@@ -2,7 +2,7 @@ import User from "../models/userModel.js";
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { generateJwtToken } from "../helpers/jwt.js";
+
 
 // @desc user signin
 // @route  POST api/users/signin
