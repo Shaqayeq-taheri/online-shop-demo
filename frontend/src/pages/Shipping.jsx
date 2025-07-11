@@ -34,7 +34,7 @@ function Shipping() {
     };
 
     return (
-        <Container className="w-50">
+        <Container className="w-50 rounded shadow-lg border bg-body-tertiary p-3 mt-2">
             <Form onSubmit={handleFormSubmit}>
                 {/* address */}
                 <FormGroup controlId="address" className="my-2">

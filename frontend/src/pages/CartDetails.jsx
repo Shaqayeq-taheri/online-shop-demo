@@ -18,7 +18,7 @@ function CartDetails() {
     const dispatch = useDispatch();
 
     const { cartItems } = useSelector((state) => state.cart);
-     
+    const { currentUser } = useSelector((state) => state.user);
 
     const addToCartHandler = async (product, quantity) => {
         dispatch(addToCart({ ...product, quantity }));
@@ -27,14 +27,16 @@ function CartDetails() {
         dispatch(removeFromCart(id));
     };
 
-    const checkOutHandler =async()=>{
-        navigate('/login?redirect=/shipping')  //if the user is logged in redirects to shipping page
-    }
+    const checkOutHandler = async () => {
+        if (currentUser) {
+            navigate("/shipping");
+        } else {
+            navigate("/signin?redirect=/shipping");
+        }
+    };
 
     return (
-        <div
-          
-        >
+        <div>
             <Row className="justify-content-center">
                 <h1 className="mt-5 mb-4 ">Shopping Cart</h1>
                 <Col md={8}>
@@ -151,17 +153,15 @@ function CartDetails() {
                                     .toFixed(2)}
                             </ListGroup.Item>
                             <ListGroup.Item>
-                                <Link to="/shipping">
-                                    <Button
-                                        type="button"
-                                        variant="dark"
-                                        className="btn-block"
-                                        disabled={cartItems.length === 0}
-                                        onClick={ checkOutHandler}
-                                    >
-                                        Proceed to checkout
-                                    </Button>
-                                </Link>
+                                <Button
+                                    type="button"
+                                    variant="dark"
+                                    className="btn-block"
+                                    disabled={cartItems.length === 0}
+                                    onClick={checkOutHandler}
+                                >
+                                    Proceed to checkout
+                                </Button>
                             </ListGroup.Item>
                         </ListGroup>
                     </Card>
