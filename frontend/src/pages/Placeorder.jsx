@@ -8,10 +8,10 @@ import Loader from "../components/Loader";
 import axios from "axios";
 import { clearCart } from "../../redux/slices/cartSlice";
 
-function Placeorder() {
+function PlaceOrder() {
     const [orders, setOrder] = useState([]);
-    const [loading, setLoading] = useState("");
-    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -36,33 +36,28 @@ function Placeorder() {
         }
     }, [paymentMethod, shippingAddress, navigate]);
 
-     
-
     const placeOrderHandler = async () => {
-
         try {
             setLoading(true);
-            const fetchOrders = async () => {
-                const  data  = await axios.post("/api/orders/createOrder", {
-                    orderItems: cartItems,
-                    shippingAddress,
-                    paymentMethod,
-                    itemsPrice,
-                    shippingPrice,
-                    taxPrice,
-                    totalPrice,
-                });
-            };
 
-         fetchOrders();
-         dispatch(clearCart())
-         navigate(`/orders`)
+            const { data } = await axios.post("/api/orders/createOrder", {
+                orderItems: cartItems,
+                shippingAddress,
+                paymentMethod,
+                itemsPrice,
+                shippingPrice,
+                taxPrice,
+                totalPrice,
+            });
+
+            dispatch(clearCart());
+            navigate(`/order/${data._id}`);
 
             setLoading(false);
         } catch (error) {
             setLoading(false);
-            setError(error.message);
-            toast.error(error.message)
+            setError(error.response?.data?.message || error.message);
+            toast.error(error.response?.data?.message || error.message);
         }
     };
 
@@ -136,19 +131,19 @@ function Placeorder() {
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Items:</Col>
-                                    <Col>${itemsPrice}</Col>
+                                    <Col>${itemsPrice.toFixed(2)}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Shipping Price:</Col>
-                                    <Col>${shippingPrice}</Col>
+                                    <Col>${shippingPrice.toFixed(2)}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Tax:</Col>
-                                    <Col>${taxPrice}</Col>
+                                    <Col>${taxPrice.toFixed(2)}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
@@ -158,7 +153,7 @@ function Placeorder() {
                                     </Col>
                                     <Col>
                                         {" "}
-                                        <strong>${totalPrice}</strong>
+                                        <strong>${totalPrice.toFixed(2)}</strong>
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
@@ -177,7 +172,7 @@ function Placeorder() {
                                 >
                                     Place Order
                                 </Button>
-                                {loading && (<Loader/>)}
+                                {loading && <Loader />}
                             </ListGroup.Item>
                         </ListGroup>
                     </Card>
@@ -187,4 +182,4 @@ function Placeorder() {
     );
 }
 
-export default Placeorder;
+export default PlaceOrder;
