@@ -9,7 +9,6 @@ import axios from "axios";
 import { clearCart } from "../../redux/slices/cartSlice";
 
 function PlaceOrder() {
-    const [orders, setOrder] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -29,11 +28,8 @@ function PlaceOrder() {
     } = cart;
 
     useEffect(() => {
-        if (!shippingAddress) {
-            navigate("/shipping");
-        } else if (!paymentMethod) {
-            navigate("/payment");
-        }
+        if (!shippingAddress) navigate("/shipping");
+        else if (!paymentMethod) navigate("/payment");
     }, [paymentMethod, shippingAddress, navigate]);
 
     const placeOrderHandler = async () => {
@@ -52,46 +48,54 @@ function PlaceOrder() {
 
             dispatch(clearCart());
             navigate(`/order/${data._id}`);
-
-            setLoading(false);
         } catch (error) {
-            setLoading(false);
             setError(error.response?.data?.message || error.message);
             toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <>
-            <Row>
+            <Row className="mt-4">
                 <Col md={8}>
-                    <ListGroup variant="flush">
+                    <h3 className="mb-3">Review Your Order</h3>
+                    <ListGroup
+                        variant="flush"
+                        className="shadow-lg rounded mb-4"
+                    >
                         <ListGroup.Item>
-                            <h2 className="mt-5 mb-5">Shipping</h2>
-
-                            <p>
-                                <strong>Address: </strong>
+                            <h5 className="fw-bold mb-2">Shipping Address</h5>
+                            <p className="mb-1">
+                                <strong>Address:</strong>{" "}
                                 {shippingAddress.address},{" "}
                                 {shippingAddress.city},{" "}
-                                {shippingAddress.postalCode},
+                                {shippingAddress.postalCode},{" "}
                                 {shippingAddress.country}
                             </p>
                         </ListGroup.Item>
+
                         <ListGroup.Item>
-                            <p>
-                                <strong>Payment Method: </strong>
-                                {paymentMethod}
+                            <h5 className="fw-bold mb-2">Payment Method</h5>
+                            <p className="mb-0">
+                                <strong>Method:</strong> {paymentMethod}
                             </p>
                         </ListGroup.Item>
+
                         <ListGroup.Item>
+                            <h5 className="fw-bold mb-3">Order Items</h5>
                             {cartItems.length === 0 ? (
                                 <Message>Your cart is empty</Message>
                             ) : (
                                 <ListGroup variant="flush">
                                     {cartItems.map((item, index) => (
-                                        <ListGroup.Item key={index}>
-                                            <Row>
-                                                <Col md={1}>
+                                        <ListGroup.Item
+                                            key={index}
+                                            className="py-3"
+                                        >
+                                            <Row className="align-items-center">
+                                                <Col md={2}>
                                                     <Image
                                                         src={item.image}
                                                         alt={item.name}
@@ -102,17 +106,24 @@ function PlaceOrder() {
                                                 <Col>
                                                     <Link
                                                         to={`/product/${item._id}`}
+                                                        className="text-decoration-none"
                                                     >
                                                         {item.name}
                                                     </Link>
                                                 </Col>
-                                                <Col md={4}>
+                                                <Col
+                                                    md={4}
+                                                    className="text-end"
+                                                >
                                                     {item.quantity} x $
-                                                    {item.price.toFixed(2)} = $
-                                                    {(
-                                                        item.quantity *
-                                                        item.price
-                                                    ).toFixed(2)}
+                                                    {item.price.toFixed(2)} ={" "}
+                                                    <strong>
+                                                        $
+                                                        {(
+                                                            item.quantity *
+                                                            item.price
+                                                        ).toFixed(2)}
+                                                    </strong>
                                                 </Col>
                                             </Row>
                                         </ListGroup.Item>
@@ -122,41 +133,40 @@ function PlaceOrder() {
                         </ListGroup.Item>
                     </ListGroup>
                 </Col>
+
                 <Col md={4}>
-                    <Card className="mt-5">
+                    <Card className="shadow-lg mt-5">
                         <ListGroup variant="flush">
                             <ListGroup.Item>
-                                <h2>Order Summary</h2>
+                                <h4 className="fw-bold mb-0">Order Summary</h4>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
-                                    <Col>Items:</Col>
-                                    <Col>${itemsPrice.toFixed(2)}</Col>
-                                </Row>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <Row>
-                                    <Col>Shipping Price:</Col>
-                                    <Col>${shippingPrice.toFixed(2)}</Col>
-                                </Row>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <Row>
-                                    <Col>Tax:</Col>
-                                    <Col>${taxPrice.toFixed(2)}</Col>
-                                </Row>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <Row>
-                                    <Col>
-                                        <strong>Total Price</strong>:
+                                    <Col>Items</Col>
+                                    <Col className="text-end">
+                                        ${Number(itemsPrice).toFixed(2)}
                                     </Col>
-                                    <Col>
-                                        {" "}
-                                        <strong>${totalPrice.toFixed(2)}</strong>
+                                </Row>
+                                <Row>
+                                    <Col>Shipping</Col>
+                                    <Col className="text-end">
+                                        ${Number(shippingPrice).toFixed(2)}
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>Tax</Col>
+                                    <Col className="text-end">
+                                        ${Number(taxPrice).toFixed(2)}
+                                    </Col>
+                                </Row>
+                                <Row className="fw-bold">
+                                    <Col>Total</Col>
+                                    <Col className="text-end">
+                                        ${Number(totalPrice).toFixed(2)}
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
+
                             {error && (
                                 <ListGroup.Item>
                                     <Message variant="danger">{error}</Message>
@@ -167,6 +177,7 @@ function PlaceOrder() {
                                 <Button
                                     type="button"
                                     variant="dark"
+                                    className="w-100"
                                     disabled={cartItems.length === 0}
                                     onClick={placeOrderHandler}
                                 >
