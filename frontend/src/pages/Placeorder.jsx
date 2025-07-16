@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Row, Col, Button } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { Row, Col, Button, ListGroup, Image, Card } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import axios from "axios";
+import { clearCart } from "../../redux/slices/cartSlice";
 
 function Placeorder() {
     const [orders, setOrder] = useState([]);
-    const [loading, setLoading] = useState("true");
-    const [error, setError] = useState("null");
+    const [loading, setLoading] = useState("");
+    const [error, setError] = useState("");
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -35,11 +36,14 @@ function Placeorder() {
         }
     }, [paymentMethod, shippingAddress, navigate]);
 
-    useEffect(() => {
+     
+
+    const placeOrderHandler = async () => {
+
         try {
             setLoading(true);
             const fetchOrders = async () => {
-                const { data } = await axios.post("/api/orders/createOrder", {
+                const  data  = await axios.post("/api/orders/createOrder", {
                     orderItems: cartItems,
                     shippingAddress,
                     paymentMethod,
@@ -50,21 +54,134 @@ function Placeorder() {
                 });
             };
 
-            fetchOrders();
+         fetchOrders();
+         dispatch(clearCart())
+         navigate(`/orders`)
 
             setLoading(false);
-          
         } catch (error) {
             setLoading(false);
             setError(error.message);
+            toast.error(error.message)
         }
-    }, []);
+    };
 
     return (
         <>
             <Row>
-                <Col md={8}>Order Summary and Details here</Col>
-                <Col md={4}>col 2</Col>
+                <Col md={8}>
+                    <ListGroup variant="flush">
+                        <ListGroup.Item>
+                            <h2 className="mt-5 mb-5">Shipping</h2>
+
+                            <p>
+                                <strong>Address: </strong>
+                                {shippingAddress.address},{" "}
+                                {shippingAddress.city},{" "}
+                                {shippingAddress.postalCode},
+                                {shippingAddress.country}
+                            </p>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                            <p>
+                                <strong>Payment Method: </strong>
+                                {paymentMethod}
+                            </p>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                            {cartItems.length === 0 ? (
+                                <Message>Your cart is empty</Message>
+                            ) : (
+                                <ListGroup variant="flush">
+                                    {cartItems.map((item, index) => (
+                                        <ListGroup.Item key={index}>
+                                            <Row>
+                                                <Col md={1}>
+                                                    <Image
+                                                        src={item.image}
+                                                        alt={item.name}
+                                                        fluid
+                                                        rounded
+                                                    />
+                                                </Col>
+                                                <Col>
+                                                    <Link
+                                                        to={`/product/${item._id}`}
+                                                    >
+                                                        {item.name}
+                                                    </Link>
+                                                </Col>
+                                                <Col md={4}>
+                                                    {item.quantity} x $
+                                                    {item.price.toFixed(2)} = $
+                                                    {(
+                                                        item.quantity *
+                                                        item.price
+                                                    ).toFixed(2)}
+                                                </Col>
+                                            </Row>
+                                        </ListGroup.Item>
+                                    ))}
+                                </ListGroup>
+                            )}
+                        </ListGroup.Item>
+                    </ListGroup>
+                </Col>
+                <Col md={4}>
+                    <Card className="mt-5">
+                        <ListGroup variant="flush">
+                            <ListGroup.Item>
+                                <h2>Order Summary</h2>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Row>
+                                    <Col>Items:</Col>
+                                    <Col>${itemsPrice}</Col>
+                                </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Row>
+                                    <Col>Shipping Price:</Col>
+                                    <Col>${shippingPrice}</Col>
+                                </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Row>
+                                    <Col>Tax:</Col>
+                                    <Col>${taxPrice}</Col>
+                                </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Row>
+                                    <Col>
+                                        <strong>Total Price</strong>:
+                                    </Col>
+                                    <Col>
+                                        {" "}
+                                        <strong>${totalPrice}</strong>
+                                    </Col>
+                                </Row>
+                            </ListGroup.Item>
+                            {error && (
+                                <ListGroup.Item>
+                                    <Message variant="danger">{error}</Message>
+                                </ListGroup.Item>
+                            )}
+
+                            <ListGroup.Item>
+                                <Button
+                                    type="button"
+                                    variant="dark"
+                                    disabled={cartItems.length === 0}
+                                    onClick={placeOrderHandler}
+                                >
+                                    Place Order
+                                </Button>
+                                {loading && (<Loader/>)}
+                            </ListGroup.Item>
+                        </ListGroup>
+                    </Card>
+                </Col>
             </Row>
         </>
     );

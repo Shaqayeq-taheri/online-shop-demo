@@ -61,7 +61,7 @@ function ProductDetails() {
             {loading ? (
               <Loader/>
             ) : error ? (
-                <Message variant={danger}>Error: {error}</Message>
+                <Message variant='danger'>Error: {error}</Message>
             ) : product ? (
                 <Row>
                     {/* Product Image Column */}

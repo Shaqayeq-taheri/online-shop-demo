@@ -38,7 +38,7 @@ function Signin() {
                 email,
                 password,
             });
-
+            toast.success("Order placed successfully!");
             dispatch(signin(response.data));
             navigate(redirect);
         } catch (error) {
