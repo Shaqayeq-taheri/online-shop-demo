@@ -45,9 +45,9 @@ function PlaceOrder() {
                 taxPrice,
                 totalPrice,
             });
-
+            toast.success('Your order was successfully placed')
             dispatch(clearCart());
-            navigate(`/order/${data._id}`);
+            navigate(`/orders/${data._id}`);
         } catch (error) {
             setError(error.response?.data?.message || error.message);
             toast.error(error.response?.data?.message || error.message);
