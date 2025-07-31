@@ -8,9 +8,11 @@ import Loader from "../components/Loader";
 import axios from "axios";
 import { clearCart } from "../../redux/slices/cartSlice";
 
+
 function PlaceOrder() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -32,6 +34,8 @@ function PlaceOrder() {
         else if (!paymentMethod) navigate("/payment");
     }, [paymentMethod, shippingAddress, navigate]);
 
+    
+
     const placeOrderHandler = async () => {
         try {
             setLoading(true);
@@ -45,7 +49,7 @@ function PlaceOrder() {
                 taxPrice,
                 totalPrice,
             });
-            toast.success('Your order was successfully placed')
+            toast.success("Your order was successfully placed");
             dispatch(clearCart());
             navigate(`/orders/${data._id}`);
         } catch (error) {

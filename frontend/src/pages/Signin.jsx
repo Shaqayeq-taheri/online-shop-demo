@@ -7,6 +7,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
+import  {isTokenValid}  from "../utils/validToken"
 
 function Signin() {
     const dispatch = useDispatch();
@@ -18,10 +19,11 @@ function Signin() {
     const { currentUser } = useSelector((state) => state.user);
 
     useEffect(() => {
-        if (currentUser) {
+        if (currentUser?.token && isTokenValid(currentUser.token)) {
             navigate(redirect);
         }
     }, [currentUser, redirect]);
+    
 
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);

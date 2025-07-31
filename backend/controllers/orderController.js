@@ -92,7 +92,7 @@ export const getMyOrders = async (req, res) => {
 export const getOrderById = async (req, res) => {
     try {
         //{ timestamps: true } automatically adds: createdAt, updatedAt / -1 means: descending
-        const order = await Order.findById(req.params._id)
+        const order = await Order.findById(req.params.id)
             .sort({ createdAt: -1 })
             .populate("user", "firstName familyName email"); //populate for adding user name and email to the order , from 'user' collection ,first,lastname email fields
 
